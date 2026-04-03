@@ -1,1 +1,98 @@
+// 1. Lớp cha Person
+class Person {
+  String id;
+  String name;
+  int age;
+  String gender;
 
+  Person(this.id, this.name, this.age, this.gender);
+
+  void hienThiThongTin() {
+    print('ID: $id | Tên: $name | Tuổi: $age | Giới tính: $gender');
+  }
+}
+
+// 2. Lớp Student kế thừa từ Person
+class Student extends Person {
+  String grade;
+  List<double> scores; // Danh sách điểm để tính điểm trung bình
+
+  Student(String id, String name, int age, String gender, this.grade, this.scores)
+      : super(id, name, age, gender);
+
+  // Tính điểm trung bình của từng học sinh
+  double tinhDiemTrungBinh() {
+    if (scores.isEmpty) return 0.0;
+    return scores.reduce((a, b) => a + b) / scores.length;
+  }
+
+  @override
+  void hienThiThongTin() {
+    super.hienThiThongTin();
+    print('Lớp học: $grade | Điểm TB: ${tinhDiemTrungBinh().toStringAsFixed(2)}');
+  }
+}
+
+// 3. Lớp Teacher kế thừa từ Person
+class Teacher extends Person {
+  String subject;
+  double salary;
+
+  Teacher(String id, String name, int age, String gender, this.subject, this.salary)
+      : super(id, name, age, gender);
+
+  @override
+  void hienThiThongTin() {
+    super.hienThiThongTin();
+    print('Môn dạy: $subject | Lương: $salary\$');
+  }
+}
+
+// 4. Lớp Classroom quản lý lớp học
+class Classroom {
+  String id;
+  String name;
+  List<Student> students = [];
+  Teacher? teacher;
+
+  Classroom(this.id, this.name);
+
+  // Thêm học sinh vào lớp
+  void themHocSinh(Student s) {
+    students.add(s);
+  }
+
+  // Gán giáo viên phụ trách
+  void ganGiaoVien(Teacher t) {
+    teacher = t;
+  }
+
+  // Hiển thị thông tin lớp học
+  void hienThiLopHoc() {
+    print('\n--- BÁO CÁO LỚP HỌC: $name (ID: $id) ---');
+    print('Giáo viên phụ trách: ${teacher?.name ?? "Chưa có"}');
+    print('Danh sách học sinh:');
+    for (var s in students) {
+      s.hienThiThongTin();
+    }
+  }
+}
+
+// 5. Hàm chính để thực thi
+void main() {
+  // Tạo giáo viên
+  var teacher1 = Teacher('GV01', 'Nguyễn Văn A', 35, 'Nam', 'Lập trình Dart', 2000);
+
+  // Tạo danh sách học sinh
+  var s1 = Student('HS01', 'Trần Thị B', 20, 'Nữ', 'CNTT1', [8.0, 9.0, 7.5]);
+  var s2 = Student('HS02', 'Lê Văn C', 21, 'Nam', 'CNTT1', [6.0, 5.5, 8.0]);
+
+  // Quản lý lớp học
+  var myClass = Classroom('L01', 'Lớp Flutter Cơ Bản');
+  myClass.ganGiaoVien(teacher1);
+  myClass.themHocSinh(s1);
+  myClass.themHocSinh(s2);
+
+  // Hiển thị báo cáo
+  myClass.hienThiLopHoc();
+}
